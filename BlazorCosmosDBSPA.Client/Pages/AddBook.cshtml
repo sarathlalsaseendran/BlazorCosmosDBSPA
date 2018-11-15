@@ -1,0 +1,48 @@
+﻿@using BlazorCosmosDBSPA.Shared.Models
+@page "/addbook"
+@inject HttpClient Http
+@inject Microsoft.AspNetCore.Blazor.Services.IUriHelper UriHelper
+
+<h2>Create Book</h2>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form>
+            <div class="form-group">
+                <label for="Name" class="control-label">Name</label>
+                <input for="Name" class="form-control" bind="@book.Name" />
+            </div>
+            <div class="form-group">
+                <label for="ISBN" class="control-label">ISBN</label>
+                <input for="ISBN" class="form-control" bind="@book.ISBN" />
+            </div>
+            <div class="form-group">
+                <label for="Author" class="control-label">Author</label>
+                <input for="Author" class="form-control" bind="@book.Author" />
+            </div>
+            <div class="form-group">
+                <label for="Price" class="control-label">Price</label>
+                <input for="Price" class="form-control" bind="@book.Price" />
+            </div>
+            <div class="form-group">
+                <input type="button" class="btn btn-default" onclick="@(async () => await CreateBook())" value="Save" />
+                <input type="button" class="btn" onclick="@Cancel" value="Cancel" />
+            </div>
+        </form>
+    </div>
+</div>
+@functions {
+
+Book book = new Book();
+
+protected async Task CreateBook()
+{
+    await Http.SendJsonAsync(HttpMethod.Post, "/api/Books/Create", book);
+    UriHelper.NavigateTo("/listbooks");
+}
+
+void Cancel()
+{
+    UriHelper.NavigateTo("/listbooks");
+}
+}

@@ -1,0 +1,50 @@
+﻿@using BlazorCosmosDBSPA.Shared.Models
+@page "/listbooks"
+@inject HttpClient Http
+
+<h1>Books Details</h1>
+<p>
+    <a href="/addbook">Create New Book</a>
+</p>
+@if (bookList == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class='table'>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>ISBN</th>
+                <th>Author</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in bookList)
+            {
+                <tr>
+                    <td>@book.Name</td>
+                    <td>@book.ISBN</td>
+                    <td>@book.Author</td>
+                    <td>@book.Price</td>
+                    <td>
+                        <a href='/editbook/@book.Id'>Edit</a>  |
+                        <a href='/deletebook/@book.Id'>Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@functions {
+Book[] bookList;
+
+protected override async Task OnInitAsync()
+{
+    bookList = await Http.GetJsonAsync<Book[]>
+("/api/Books/Get");
+}
+
+}
